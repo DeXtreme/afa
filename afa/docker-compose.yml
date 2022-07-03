@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: api
+    build: ./api/
+    volumes:
+      - ./api:/api
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./.env/api.env
+    depends_on:
+      - db
+
+  app:
+    container_name: app
+    build: ./app/
+    volumes:
+      - ./app:/app
+    ports:
+      - "80:80"
+    env_file:
+      - ./.env/app.env
+    environment:
+      - PORT=80
+    
+  db:
+    container_name: db
+    image: postgres:14.1-bullseye
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env/db.env
+  
+volumes:
+  postgres_data:
